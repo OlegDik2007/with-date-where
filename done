@@ -2,3 +2,27 @@ SELECT min(age((SELECT max(time)::date
                 FROM   courier_actions), birth_date))::varchar as min_age
 FROM   couriers
 WHERE  sex = 'male'
+
+
+
+
+
+with cancel_orders as (SELECT order_id
+                       FROM   user_actions
+                       WHERE  action = 'cancel_order')
+SELECT order_id
+FROM   user_actions
+WHERE  order_id not in (SELECT *
+                        FROM   cancel_orders)
+ORDER BY order_id limit 1000;
+
+
+
+
+
+SELECT order_id
+FROM   user_actions
+WHERE  order_id not in (SELECT order_id
+                        FROM   user_actions
+                        WHERE  action = 'cancel_order')
+ORDER BY order_id limit 1000
